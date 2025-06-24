@@ -1,0 +1,49 @@
+﻿@model List<agri_connect.Models.Product>
+@{
+    ViewData["Title"] = "Available Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var categories = ViewBag.Categories as List<string>;
+    var selected = ViewBag.SelectedCategory as string;
+}
+
+<h2>🛒 Products</h2>
+
+<a asp-controller="@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value" asp-action="Dashboard" class="btn btn-secondary mb-3">
+    ← Back to Dashboard
+</a>
+
+<!-- Category Filter -->
+<form method="get" asp-action="Index">
+    <select name="category" class="form-select w-50 mb-3" onchange="this.form.submit()">
+        <option value="">All Categories</option>
+        @foreach (var cat in categories)
+        {
+            <option value="@cat" selected="@(cat == selected)">
+                @cat
+            </option>
+        }
+    </select>
+</form>
+
+<!-- Product Cards -->
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    @foreach (var product in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@product.Category</h6>
+                    <p class="card-text">@product.Description</p>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <span><strong>R @product.Price.ToString("F2")</strong></span>
+                    <form method="post" asp-controller="Cart" asp-action="AddToCart">
+                        <input type="hidden" name="id" value="@product.Id" />
+                        <button class="btn btn-sm btn-outline-success">Add to Cart 🛒</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

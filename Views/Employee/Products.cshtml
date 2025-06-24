@@ -1,0 +1,26 @@
+﻿@using agri_connect.Models
+@model List<Product>
+@{
+    ViewData["Title"] = "Available Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>🛒 Available Products</h2>
+
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    @foreach (var product in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@product.Category</h6>
+                    <p class="card-text">@product.Description</p>
+                </div>
+                <div class="card-footer">
+                    <strong>💰 Price:</strong> R @product.Price.ToString("F2")
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,68 @@
+@using agri_connect.Models
+@model List<EmployeeUpdate>
+
+@{
+    ViewData["Title"] = "Employee Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>🏢 Employee Dashboard</h2>
+
+<a href="/Employee/ProductsView" class="btn btn-outline-primary mb-3">🛒 View Products</a>
+
+
+<!-- Weekly Summary -->
+<div class="alert alert-info">
+    📅 <strong>This Week:</strong> You've added <b>@ViewBag.WeeklyCount</b> tasks.
+</div>
+
+<!-- Task Type Pie Chart -->
+<h4>📌 Task Type Distribution</h4>
+<canvas id="employeeChart" width="400" height="200"></canvas>
+
+<hr />
+
+<!-- Add new note -->
+<form method="post" asp-action="AddNote">
+    <input name="taskType" class="form-control mb-2" placeholder="Task Type (e.g. Admin, Field, Logistics)" />
+    <textarea name="taskNote" class="form-control mb-2" placeholder="Task note..."></textarea>
+    <button class="btn btn-primary">Submit Task</button>
+</form>
+
+<hr />
+
+<!-- Recent Notes -->
+<h4>📝 Recent Tasks</h4>
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var note in Model)
+    {
+        <div class="card mb-3 p-3 shadow-sm">
+            <strong>@note.Username</strong> (@note.Timestamp.ToString("g"))<br />
+            <b>Type:</b> @note.TaskType<br />
+            <p>@note.TaskNote</p>
+        </div>
+    }
+}
+else
+{
+    <p>No tasks submitted yet.</p>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('employeeChart');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: @Html.Raw(Json.Serialize(ViewBag.ChartLabels ?? new string[] { })),
+                datasets: [{
+                    label: 'Tasks',
+                    data: @Html.Raw(Json.Serialize(ViewBag.ChartCounts ?? new int[] { })),
+                    borderWidth: 1
+                }]
+            }
+        });
+    </script>
+}

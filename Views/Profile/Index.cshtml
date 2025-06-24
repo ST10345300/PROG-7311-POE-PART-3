@@ -1,0 +1,27 @@
+﻿@model agri_connect.Models.User
+@{
+    ViewData["Title"] = "User Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>👤 Profile Management</h2>
+
+@if (Model != null)
+{
+    <form method="post" asp-action="Update">
+        <input type="hidden" name="Email" value="@Model.Email" />
+        <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input name="Username" value="@Model.Username" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input name="Password" value="@Model.Password" class="form-control" />
+        </div>
+        <button class="btn btn-primary">Update</button>
+    </form>
+}
+else
+{
+    <p>User not found.</p>
+}

@@ -1,0 +1,81 @@
+@using agri_connect.Models
+@model List<FarmerUpdate>
+
+@{
+    ViewData["Title"] = "Farmer Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">👨‍🌾 Farmer Dashboard</h2>
+
+<a href="/Farmer/ProductsView" class="btn btn-outline-primary mb-3">🛒 View Products</a>
+<a class="btn btn-outline-dark" asp-action="MyCart" asp-controller="Farmer">🛒 My Cart</a>
+
+<!-- Weekly Summary -->
+<div class="alert alert-info shadow-sm">
+    📊 <strong>This week:</strong> You’ve added <b>@ViewBag.WeeklyCount</b> updates.
+</div>
+
+<!-- Chart Section -->
+<div class="my-4">
+    <h4>🌱 Crop Plan Distribution</h4>
+    <canvas id="farmerChart" width="400" height="200" class="mb-4"></canvas>
+</div>
+
+<!-- Add New Update -->
+<div class="card shadow-sm p-4 mb-5">
+    <h5 class="mb-3">➕ Add New Crop Update</h5>
+    <form method="post" asp-action="AddUpdate">
+        <div class="form-floating mb-3">
+            <input type="text" name="cropPlan" class="form-control" id="cropPlan" placeholder="Crop Plan" required />
+            <label for="cropPlan">🌽 Crop Plan</label>
+        </div>
+        <div class="form-floating mb-3">
+            <textarea name="description" class="form-control" id="description" placeholder="Activity description" style="height: 100px;" required></textarea>
+            <label for="description">📝 Description</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" name="photoFileName" class="form-control" id="photoFile" placeholder="Image filename (mocked)" />
+            <label for="photoFile">📷 Photo Filename (optional)</label>
+        </div>
+        <button type="submit" class="btn btn-success w-100 fw-bold shadow">✅ Submit Update</button>
+    </form>
+</div>
+
+<!-- Recent Updates -->
+<h4 class="mb-3">🕒 Recent Activity</h4>
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var update in Model)
+    {
+        <div class="card mb-3 p-3 shadow-sm">
+            <strong>@update.Username</strong> (@update.Timestamp.ToString("g"))<br />
+            <b>Crop Plan:</b> @update.CropPlan<br />
+            <b>Photo:</b> @update.PhotoFileName<br />
+            <b>Description:</b> @update.Description<br />
+            <b>Productivity Score:</b> @update.ProductivityScore%
+        </div>
+    }
+}
+else
+{
+    <p>No updates yet.</p>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('farmerChart');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: @Html.Raw(Json.Serialize(ViewBag.ChartLabels ?? new string[] { })),
+                datasets: [{
+                    label: 'Crop Plans',
+                    data: @Html.Raw(Json.Serialize(ViewBag.ChartCounts ?? new int[] { })),
+                    borderWidth: 1
+                }]
+            }
+        });
+    </script>
+}

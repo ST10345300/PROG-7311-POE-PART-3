@@ -1,0 +1,43 @@
+﻿@model List<agri_connect.Models.Product>
+@{
+    ViewData["Title"] = "My Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>🛒 My Cart</h2>
+
+@if (!Model.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price (R)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Price.ToString("F2")</td>
+                    <td>
+                        <form method="post" asp-action="RemoveFromCart">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button class="btn btn-sm btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <form method="post" asp-action="Checkout">
+        <button class="btn btn-success">Confirm Order</button>
+    </form>
+}

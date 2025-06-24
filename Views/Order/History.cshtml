@@ -1,0 +1,21 @@
+﻿@model List<string>
+@{
+    ViewData["Title"] = "Order History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>📦 Order History</h2>
+
+@if (!Model.Any())
+{
+    <p>No orders yet.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var order in Model)
+        {
+            <li class="list-group-item">@order</li>
+        }
+    </ul>
+}

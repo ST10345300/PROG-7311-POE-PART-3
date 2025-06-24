@@ -1,0 +1,14 @@
+﻿@model List<agri_connect.Models.Product>
+
+<h2>🛒 My Products</h2>
+<a class="btn btn-success mb-3" href="/FarmerProduct/AddProduct">+ Add Product</a>
+
+@foreach (var product in Model)
+{
+    <div class="card mb-2 p-2">
+        <h5>@product.Name</h5>
+        <p>@product.Description</p>
+        <p><b>R</b>@product.Price</p>
+        <p><i>@product.Category</i></p>
+    </div>
+}
